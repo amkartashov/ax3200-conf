@@ -1,0 +1,25 @@
+- tags: amnezia
+  block:
+    - name: install amnezia packages
+      # looks like opkg fails to check if package is installed if URL is used
+      # so I use shell instead
+      shell: "opkg list-installed {{package}} | grep {{package}} || opkg install https://github.com/Slava-Shchipunov/awg-openwrt/releases/download/v24.10.5/{{package}}_v24.10.5_aarch64_cortex-a53_mediatek_mt7622.ipk"
+      loop:
+        - amneziawg-tools
+        - kmod-amneziawg
+        - luci-proto-amneziawg
+      loop_control:
+        loop_var: package
+    #- name: restart network
+    #  shell: "service network restart"
+    - name: vpn_domains
+      uci:
+        command: section
+        config: dhcp
+        type: ipset
+        find:
+          device: radio0
+          ssid: My SSID
+        value:
+          encryption: none
+        replace: yes

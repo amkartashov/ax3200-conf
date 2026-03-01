@@ -1,0 +1,5 @@
+openwrt:
+  hosts:
+    ax3200:
+      ansible_host: 192.168.31.1
+      ansible_user: root

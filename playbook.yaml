@@ -1,0 +1,9 @@
+- name: router tasks
+  hosts: openwrt
+  roles:
+    - gekmihesg.openwrt
+  tasks:
+    - name: include router tasks
+      include_tasks: "{{ item }}"
+      tags: always # https://serverfault.com/a/1048724
+      loop: "{{ lookup('fileglob', 'tasks/router/*.yaml', wantlist=True) }}"
