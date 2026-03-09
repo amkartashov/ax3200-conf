@@ -1,9 +1,20 @@
 - tags: amnezia
   block:
+    - name: get arch
+      community.openwrt.command:
+        uses_shell: true
+        cmd: source /etc/openwrt_release; echo "${DISTRIB_ARCH}"
+      register: DISTRIB_ARCH
+      changed_when: false
     - name: install amnezia packages
       # looks like opkg fails to check if package is installed if URL is used
       # so I use shell instead
-      shell: "opkg list-installed {{package}} | grep {{package}} || opkg install https://github.com/Slava-Shchipunov/awg-openwrt/releases/download/v24.10.5/{{package}}_v24.10.5_aarch64_cortex-a53_mediatek_mt7622.ipk"
+      community.openwrt.command:
+        uses_shell: true
+        cmd: >-
+          opkg list-installed {{package}}
+          | grep {{package}}
+          || opkg install https://github.com/Slava-Shchipunov/awg-openwrt/releases/download/v{{ansible_distribution_version}}/{{package}}_v{{ansible_distribution_version}}_{{DISTRIB_ARCH.stdout}}_{{openwrt_board.release.target|replace('/','_')}}.ipk
       loop:
         - amneziawg-tools
         - kmod-amneziawg
@@ -13,7 +24,7 @@
     #- name: restart network
     #  shell: "service network restart"
     - name: vpn_domains
-      uci:
+      community.openwrt.uci:
         command: section
         config: dhcp
         type: ipset

@@ -1,3 +1,2 @@
-collections: []
-roles:
-  - name: gekmihesg.openwrt
+collections:
+  - name: community.openwrt

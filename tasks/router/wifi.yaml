@@ -1,12 +1,12 @@
 - tags: wifi
   block:
     - name: enable WED # https://openwrt.org/toh/xiaomi/ax3200#enable_wed
-      lineinfile:
+      community.openwrt.lineinfile:
         path: /etc/modules.d/mt7915e
         insertafter: EOF
         line: mt7915e wed_enable=Y
     - name: 2g device
-      uci:
+      community.openwrt.uci:
         command: set
         key: wireless.radio0
         value:
@@ -15,7 +15,7 @@
           type: mac80211
           cell_density: 0
     - name: 2g interface
-      uci:
+      community.openwrt.uci:
         command: section
         config: wireless
         type: wifi-iface
@@ -28,7 +28,7 @@
           encryption: psk2
           key: '{{ wifi_key }}'
     - name: 5g device
-      uci:
+      community.openwrt.uci:
         command: set
         key: wireless.radio1
         value:
@@ -41,7 +41,7 @@
           channel: auto
           country: RU
     - name: 5g interface
-      uci:
+      community.openwrt.uci:
         command: section
         config: wireless
         type: wifi-iface
@@ -55,6 +55,6 @@
           key: '{{ wifi_key }}'
 
     - name: commit changes
-      uci:
+      community.openwrt.uci:
         command: commit
       notify: reload wifi

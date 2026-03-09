@@ -1,8 +1,12 @@
 - name: router tasks
   hosts: openwrt
+  gather_facts: false
   roles:
-    - gekmihesg.openwrt
+    - community.openwrt.init
   tasks:
+    - name: Gather facts
+      community.openwrt.setup:
+
     - name: include router tasks
       include_tasks: "{{ item }}"
       tags: always # https://serverfault.com/a/1048724
